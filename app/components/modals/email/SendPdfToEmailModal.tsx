@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 // ShadCn
 import {
@@ -20,6 +20,9 @@ import { BaseButton } from "@/app/components";
 // Helpers
 import { isValidEmail } from "@/lib/helpers";
 
+// Zustand store
+import { useInvoiceStore } from "@/store/invoiceStore";
+
 type SendPdfToEmailModalProps = {
     sendPdfToMail: (email: string) => Promise<void>;
     children: React.ReactNode;
@@ -29,10 +32,14 @@ const SendPdfToEmailModal = ({
     sendPdfToMail,
     children,
 }: SendPdfToEmailModalProps) => {
-    const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState("");
-    const [error, setError] = useState("");
+    const open = useInvoiceStore((state) => state.open);
+    const setOpen = useInvoiceStore((state) => state.setOpen);
+    const loading = useInvoiceStore((state) => state.loading);
+    const setLoading = useInvoiceStore((state) => state.setLoading);
+    const email = useInvoiceStore((state) => state.email);
+    const setEmail = useInvoiceStore((state) => state.setEmail);
+    const error = useInvoiceStore((state) => state.error);
+    const setError = useInvoiceStore((state) => state.setError);
     const errorMessage = "Please enter a valid email address";
 
     const handleSendPdf = () => {
