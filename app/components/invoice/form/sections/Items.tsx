@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 
 // RHF
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -14,7 +14,6 @@ import {
     useSensor,
     useSensors,
     DragEndEvent,
-    DragOverlay,
     UniqueIdentifier,
 } from "@dnd-kit/core";
 import {
@@ -33,6 +32,9 @@ import { Plus } from "lucide-react";
 
 // Types
 import { InvoiceType } from "@/types";
+
+// Zustand store
+import { useInvoiceStore } from "@/store/invoiceStore";
 
 const Items = () => {
     const { control, setValue } = useFormContext<InvoiceType>();
@@ -70,9 +72,11 @@ const Items = () => {
         }
     };
 
-    // DnD
-    const [activeId, setActiveId] = useState<UniqueIdentifier>();
+    // Zustand store
+    const activeId = useInvoiceStore((state) => state.activeId);
+    const setActiveId = useInvoiceStore((state) => state.setActiveId);
 
+    // DnD
     const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
     const handleDragEnd = useCallback(
@@ -123,16 +127,6 @@ const Items = () => {
                         />
                     ))}
                 </SortableContext>
-                {/* <DragOverlay
-                    dropAnimation={{
-                        duration: 500,
-                        easing: "cubic-bezier(0.18, 0.67, 0.6, 1.22)",
-                    }}
-                >
-                    <div className="w-[10rem]">
-                        <p>Click to drop</p>
-                    </div>
-                </DragOverlay> */}
             </DndContext>
             <BaseButton
                 tooltipLabel="Add a new item to the list"
